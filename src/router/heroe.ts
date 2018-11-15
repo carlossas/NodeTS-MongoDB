@@ -2,22 +2,19 @@ import { Router, Request, Response } from 'express';
 //INSTANCIA DE CONEXION MONGO DB
 import MongoDB from '../mongodb/mongodb';
 //SCHEMA HEROE
-import Heroe from '../mongodb/models/heroe';
+import modeloHeroe from '../mongodb/models/heroe';
 
-//CREAMOS LA CONEXION A MONGODB
-MongoDB.instance;
-
-const _mongodb = Router();
+const Heroe = Router();
 
 //OBTIENE TODOS LOS HEROES
-_mongodb.get( '/heroes_mongodb', (req: Request, res: Response) =>{
+Heroe.get( '/heroes_mongodb', (req: Request, res: Response) =>{
 
     //RECIBO DESDE DONDE PAGINAR
     var desde = req.query.desde || 0;
     desde = Number(desde);
 
     //ESTA FUNCION DEVUELVE TODOS LOS DATOS PAGINADOS
-    MongoDB.obtenerTodos(Heroe, desde, (err:any, datos: any)=>{
+    MongoDB.obtenerTodos(modeloHeroe, desde, (err:any, datos: any, conteo:any)=>{
 
         //SI EXISTE UN ERROR
         if(err){
@@ -28,7 +25,8 @@ _mongodb.get( '/heroes_mongodb', (req: Request, res: Response) =>{
         }else{
             res.json({
                 error: false,
-                datos
+                datos: datos,
+                total: conteo
             });
         }
 
@@ -37,4 +35,4 @@ _mongodb.get( '/heroes_mongodb', (req: Request, res: Response) =>{
 });
 
 
-export default _mongodb;
+export default Heroe;

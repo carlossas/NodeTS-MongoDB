@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+import  mongoose from 'mongoose';
 
 export default class MongoDB{
 
@@ -18,12 +18,7 @@ export default class MongoDB{
             useCreateIndex: true
         }
 
-        this.conexion = mongoose.connect(URL, options, (err)=>{
-            if (err) throw err;
-            else{
-                console.log("BASE DE DATOS ONLINE MONGO DB");
-            }
-        });
+        this.conectar(URL, options);
  
 
     }
@@ -33,10 +28,13 @@ export default class MongoDB{
     public static get instance(){
         return this._instance || ( this._instance = new this() );
     }
-    
-    static obtenerTodos(schema:any, desde:any, callback: Function){
+    //
+    static obtenerTodos(schema:any, desde:number, callback: Function){
+        //CREAMOS UNA INSTANCIA
+        this.instance.conexion;
         //BUSQUEDA Y CAMPOS QUE DESEA OBTENER, SI NO SE DEFINE DEVUELVE TODOS LOS CAMPOS
-        schema.find({})
+        schema
+            .find({})
             .skip(desde)
             .limit(5)
             .exec(
@@ -48,13 +46,26 @@ export default class MongoDB{
     
                     schema.count({}, (err:any, conteo:any) => {
                         //TODO SALIO BIEN
-                        callback(null, {
-                            datos: datos,
-                            total: conteo
-                        });
+                        callback(null, 
+                            datos,
+                            conteo
+                        );
                         
                     })
     
                 });
+    }
+
+    //VALIDAMOS LA CONEXION Y SI ES CORRECTA, ENTRAMOS
+    private conectar(URL:string, options:any){
+
+        this.conexion = mongoose.connect(URL, options, (err)=>{
+            if (err) throw err;
+            else{
+                console.log("BASE DE DATOS ONLINE MONGO DB");
+                this.conectado = true;
+            }
+        });
+
     }
 }

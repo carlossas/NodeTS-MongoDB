@@ -6,7 +6,8 @@
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1",
         "publicFolder": "copyfiles --up 1 src/public/* dist",
-        "build": "tsc && npm run publicFolder"
+        "build": "tsc && npm run publicFolder",
+        "compiler": "tsc && npm run publicFolder && nodemon dist/index"
     },
     "author": "Carlos Adrian García Reyes",
     "license": "ISC",
